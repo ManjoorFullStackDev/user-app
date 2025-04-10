@@ -22,6 +22,9 @@ yarn start
 
 API Endpoints
 POST /register — Register new user
+
 POST /login — Login & receive token
+
 GET /download — Import excel sheet from db
+
 GET /tasks?completed= true|false — Filter tasks
