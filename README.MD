@@ -17,7 +17,7 @@
 
 yarn
 yarn build     
-yarn start    
+yarn start
 
 
 API Endpoints
