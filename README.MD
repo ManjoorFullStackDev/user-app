@@ -17,6 +17,7 @@
 
 yarn
 docker compose up -d //To create container from sql-server image
+
 yarn build     
 yarn start
 
