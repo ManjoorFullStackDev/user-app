@@ -21,6 +21,7 @@ yarn start
 
 
 API Endpoints
+
 POST /register — Register new user
 
 POST /login — Login & receive token
