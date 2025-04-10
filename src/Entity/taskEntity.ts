@@ -3,15 +3,15 @@ import { User } from "./userEntity";
 
 @Entity()
 export class Task {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @Column()
-    description: string;
+  @Column()
+  description: string;
 
-    @Column({default: false})
-    completed: boolean;
+  @Column({ default: false })
+  completed: boolean;
 
-    @ManyToOne(() => User, (user) => user.tasks)
-    user: User;
+  @ManyToOne(() => User, (user) => user.tasks)
+  user: User;
 }

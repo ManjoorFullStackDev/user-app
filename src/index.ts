@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/users', userRoutes);
+app.use("/api/users", userRoutes);
 AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
@@ -14,4 +14,4 @@ AppDataSource.initialize()
   .catch((err) => {
     console.error("Error during Data Source initialization", err);
   });
-app.listen(3000, ()=>console.log('server is running on port 3000'))
+app.listen(3000, () => console.log("server is running on port 3000"));
