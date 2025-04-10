@@ -2,11 +2,11 @@
 
 ## Features
 - Express.js for building APIs
-- TypeScript for static typing
+- TypeScript for  strict typing
 - TypeORM for database ORM
 - SQL Server running in Docker
 - User authentication with token
-- Excel-based chat import
+- Excel chat import
 - Task filtering (completed/pending)
 
 ## Prerequisites
