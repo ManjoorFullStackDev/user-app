@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AppDataSource } from "../../ormConfig";
+import { AppDataSource } from "../ormConfig";
 import { User } from "../Entity/userEntity";
 import { Task } from "../Entity/taskEntity";
 import bcrypt from "bcrypt";

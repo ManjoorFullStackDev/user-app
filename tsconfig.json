@@ -1,17 +1,15 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "allowImportingTsExtensions": true,
-        "resolveJsonModule": true,
-        "noEmit": true,
-        "outDir": "dist",
-        "baseUrl": "/"
-    },
-    "include": [
-        "src",
-    ],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": "/"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

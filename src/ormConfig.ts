@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
-import { User } from "./src/Entity/userEntity.ts";
-import { Task } from "./src/Entity/taskEntity.ts";
+import { User } from "./Entity/userEntity";
+import { Task } from "./Entity/taskEntity";
 import dotenv from "dotenv";
 dotenv.config();
 
