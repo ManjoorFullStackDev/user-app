@@ -1,4 +1,4 @@
-import { AppDataSource } from "../ormConfig";
+import { AppDataSource } from "./ormConfig";
 import express from "express";
 import userRoutes from "./routes/userRoute";
 import cookieParser from "cookie-parser";

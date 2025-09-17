@@ -19,6 +19,6 @@ export const authenticateToken = (
     (req as any).user = decoded;
     next();
   } catch (err) {
-    res.status(403).json({ message: "Invalid or expired token" });
+    res.status(403).json({ message: `${err}:Invalid or expired token` });
   }
 };
