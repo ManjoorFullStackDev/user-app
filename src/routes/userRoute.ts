@@ -8,6 +8,7 @@ import {
 import { authenticateToken } from "../middleware/auth.middleware";
 const router = Router();
 
+
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/tasks", authenticateToken, getTasks);
