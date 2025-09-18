@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 const JWT_Key = "manjoor5678";
 
-//Auth Middleware:
+//Auth Middleware
 export const authenticateToken = (
   req: Request,
   res: Response,
