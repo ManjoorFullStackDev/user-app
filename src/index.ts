@@ -1,6 +1,9 @@
-import { AppDataSource } from "./ormConfig";
+import "reflect-metadata";
+import dotenv from "dotenv";
+dotenv.config();
+import { AppDataSource } from "./ormConfig.js";
 import express from "express";
-import userRoutes from "./routes/userRoute";
+import userRoutes from "./routes/userRoute.js";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(express.json());
@@ -14,4 +17,8 @@ AppDataSource.initialize()
   .catch((err) => {
     console.error("Error during Data Source initialization", err);
   });
-app.listen(3000, () => console.log("server is running on port 3000"));
+const PORT = Number(process.env.PORT) || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
+});

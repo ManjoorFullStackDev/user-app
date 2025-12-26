@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { AppDataSource } from "../ormConfig";
-import { User } from "../Entity/userEntity";
-import { Task } from "../Entity/taskEntity";
+import { AppDataSource } from "../ormConfig.js";
+import { User } from "../Entity/userEntity.js";
+import { Task } from "../Entity/taskEntity.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import ExcelJs from "exceljs";
@@ -11,7 +11,7 @@ import {
   TokenResponse,
   TaskResponse,
   UserRow,
-} from "./types";
+} from "./types.js";
 import dotenv from "dotenv";
 
 dotenv.config();

@@ -5,20 +5,20 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Task } from "./taskEntity";
+import { Task } from "./taskEntity.js";
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({ type: "nvarchar", length: 100 })
   username: string;
 
-  @Column()
+  @Column({ type: "nvarchar", length: 150 })
   email: string;
 
-  @Column()
+  @Column({ type: "nvarchar", length: 255 })
   password: string;
 
   @ManyToOne(() => Task, (task) => task.user)
