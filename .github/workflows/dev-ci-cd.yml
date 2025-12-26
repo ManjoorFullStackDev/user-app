@@ -24,6 +24,14 @@ jobs:
       - name: Build
         run: yarn build
 
+      - name: Verify ESM build output
+        run: |
+          sed -n '1,5p' dist/index.js
+          if grep -q "exports.__esModule" dist/index.js; then
+            echo "❌ Build output is CommonJS. Expected ESM."
+            exit 1
+          fi
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
