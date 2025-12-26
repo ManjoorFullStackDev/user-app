@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Task } from "./taskEntity.js";
+import { Task } from "./taskEntity";
 
 @Entity()
 export class User {
