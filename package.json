@@ -1,15 +1,20 @@
 {
   "name": "user-app",
-  "version": "1.0.0", 
+  "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "license": "MIT",
+
+  "engines": {
+    "node": "20.x"
+  },
+
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts"
   },
-  "license": "MIT",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
@@ -25,12 +30,13 @@
     "typeorm": "^0.3.22",
     "xlsx": "^0.18.5"
   },
+
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.14.0",
+    "@types/node": "^20.14.0",
     "@typescript-eslint/eslint-plugin": "^8.44.0",
     "@typescript-eslint/parser": "^8.44.0",
     "eslint": "^9.35.0",
