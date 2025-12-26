@@ -4,8 +4,8 @@ import {
   registerUser,
   getTasks,
   downloadUsers,
-} from "../api/userApi";
-import { authenticateToken } from "../middleware/auth.middleware";
+} from "../api/userApi.js";
+import { authenticateToken } from "../middleware/auth.middleware.js";
 const router = Router();
 
 
