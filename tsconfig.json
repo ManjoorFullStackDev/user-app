@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "CommonJS",
 
     "rootDir": "src",
     "outDir": "dist",
@@ -15,7 +13,6 @@
     "emitDecoratorMetadata": true,
 
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
   "include": ["src"]

@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import dotenv from "dotenv";
 dotenv.config();
-import { AppDataSource } from "./ormConfig.js";
+import { AppDataSource } from "./ormConfig";
 import express from "express";
-import userRoutes from "./routes/userRoute.js";
+import userRoutes from "./routes/userRoute";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(express.json());

@@ -1,4 +1,4 @@
-import { Task } from "../Entity/taskEntity.js";
+import { Task } from "../Entity/taskEntity";
 
 export interface RegisterUserInput {
   username: string;
