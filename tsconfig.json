@@ -5,16 +5,18 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
 
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "rootDir": "src",
+    "outDir": "dist",
 
     "strict": true,
     "strictPropertyInitialization": false,
 
-    "rootDir": "src",
-    "outDir": "dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
 
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
-  }
+  },
+  "include": ["src"]
 }
