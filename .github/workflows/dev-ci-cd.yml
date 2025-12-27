@@ -1,0 +1,52 @@
+name: Dev CI/CD
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  dev-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Verify ESM build output
+        run: |
+          sed -n '1,5p' dist/index.js
+          if grep -q "exports.__esModule" dist/index.js; then
+            echo "❌ Build output is CommonJS. Expected ESM."
+            exit 1
+          fi
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEV_EC2_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.DEV_EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Dev EC2
+        run: |
+          ssh ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }} << 'EOF'
+            cd /home/ubuntu/user-app
+            git checkout dev
+            git pull origin dev
+            yarn install --production --frozen-lockfile
+            yarn build
+            pm2 reload user-app || pm2 start dist/index.js --name user-app
+            pm2 save
+          EOF
