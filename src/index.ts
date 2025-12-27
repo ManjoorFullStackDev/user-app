@@ -1,24 +1,23 @@
+import "./env";
 import "reflect-metadata";
-import dotenv from "dotenv";
-dotenv.config();
-import { AppDataSource } from "./ormConfig";
+
 import express from "express";
-import userRoutes from "./routes/userRoute";
 import cookieParser from "cookie-parser";
+import { AppDataSource } from "./ormConfig";
+import userRoutes from "./routes/userRoute";
+
 const app = express();
+
 app.use(express.json());
 app.use(cookieParser());
-
 app.use("/api/users", userRoutes);
+
 AppDataSource.initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-  })
-  .catch((err) => {
-    console.error("Error during Data Source initialization", err);
-  });
+  .then(() => console.log("✅ DB connected"))
+  .catch((err) => console.error("❌ DB error", err));
+
 const PORT = Number(process.env.PORT) || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
