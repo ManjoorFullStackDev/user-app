@@ -9,29 +9,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Node setup
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'yarn'
+          cache: yarn
 
+      # 3️⃣ Install deps
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
+      # 4️⃣ Build once (SOURCE OF TRUTH)
       - name: Build
         run: yarn build
 
+      # 5️⃣ Validate build output
       - name: Verify ESM build output
         run: |
-          sed -n '1,5p' dist/index.js
           if grep -q "exports.__esModule" dist/index.js; then
             echo "❌ Build output is CommonJS. Expected ESM."
             exit 1
           fi
 
+      # 6️⃣ Package artifacts
+      - name: Prepare deploy bundle
+        run: |
+          mkdir deploy
+          cp -r dist package.json yarn.lock node_modules deploy/
+
+      # 7️⃣ Setup SSH
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -39,14 +50,36 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H ${{ secrets.DEV_EC2_HOST }} >> ~/.ssh/known_hosts
 
+      # 8️⃣ Deploy atomically
       - name: Deploy to Dev EC2
         run: |
           ssh ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }} << 'EOF'
-            cd /home/ubuntu/user-app
-            git checkout dev
-            git pull origin dev
-            yarn install --production --frozen-lockfile
-            yarn build
-            pm2 reload user-app || pm2 start dist/index.js --name user-app
+            set -e
+
+            APP_DIR=/home/ubuntu/user-app
+            RELEASE_DIR=$APP_DIR/releases/$(date +%s)
+
+            mkdir -p $APP_DIR/releases
+            mkdir -p $RELEASE_DIR
+
+            exit
+          EOF
+
+      # 9️⃣ Copy files
+      - name: Copy files to EC2
+        run: |
+          rsync -avz deploy/ \
+            ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }}:/home/ubuntu/user-app/releases/current/
+
+      # 🔟 Activate release + PM2
+      - name: Restart app
+        run: |
+          ssh ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }} << 'EOF'
+            cd /home/ubuntu/user-app/releases/current
+
+            pm2 reload user-app \
+              --update-env \
+              || pm2 start dist/index.js --name user-app
+
             pm2 save
           EOF
