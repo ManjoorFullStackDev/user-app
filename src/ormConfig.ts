@@ -1,17 +1,17 @@
 import { DataSource } from "typeorm";
 import { User } from "./Entity/userEntity";
 import { Task } from "./Entity/taskEntity";
+import { env } from "./env";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-    ssl: {
-    rejectUnauthorized: false,
-  },
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+
+
 
   extra: {
     connectTimeout: 20000,

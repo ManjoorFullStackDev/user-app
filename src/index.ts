@@ -1,10 +1,10 @@
 import "./env";
 import "reflect-metadata";
-
+import { AppDataSource } from "./ormConfig";
 import express from "express";
 import cookieParser from "cookie-parser";
-import { AppDataSource } from "./ormConfig";
 import userRoutes from "./routes/userRoute";
+import { env } from "./env";
 
 const app = express();
 
@@ -13,11 +13,14 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 
 AppDataSource.initialize()
-  .then(() => console.log("✅ DB connected"))
-  .catch((err) => console.error("❌ DB error", err));
+  .then(() => {
+    console.log("✅ Database connected");
+  })
+  .catch((err) => {
+    console.error("❌ Database connection failed", err);
+    process.exit(1); // HARD FAIL (important)
+  });
 
-const PORT = Number(process.env.PORT) || 3000;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+app.listen(env.PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${env.PORT}`);
 });
