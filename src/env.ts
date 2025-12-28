@@ -5,7 +5,6 @@
 console.log(`Connecting to ${process.env.DB_HOST}:${process.env.DB_PORT} as ${process.env.DB_USERNAME}`);
 
 
-// THEN validate
 const requiredEnv = [
   "DB_HOST",
   "DB_PORT",
