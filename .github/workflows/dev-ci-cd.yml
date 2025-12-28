@@ -9,26 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout
+      # 1️⃣ Checkout source
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2️⃣ Node setup
+      # 2️⃣ Setup Node (LTS)
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: yarn
 
-      # 3️⃣ Install deps
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # 4️⃣ Build once (SOURCE OF TRUTH)
+      # 4️⃣ Build (SOURCE OF TRUTH)
       - name: Build
         run: yarn build
 
-      # 5️⃣ Validate build output
+      # 5️⃣ Validate build output (ESM check)
       - name: Verify ESM build output
         run: |
           if grep -q "exports.__esModule" dist/index.js; then
@@ -36,46 +36,54 @@ jobs:
             exit 1
           fi
 
-      # 6️⃣ Package artifacts
+      # 6️⃣ Prepare deploy bundle (artifact)
       - name: Prepare deploy bundle
         run: |
           mkdir deploy
           cp -r dist package.json yarn.lock node_modules deploy/
 
-      # 7️⃣ Setup SSH
+      # 7️⃣ Setup SSH (RSA key)
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.DEV_EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.DEV_EC2_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.DEV_EC2_HOST }} >> ~/.ssh/known_hosts || true
 
-      # 8️⃣ Deploy atomically
-      - name: Deploy to Dev EC2
+      # 8️⃣ Create release directory on EC2
+      - name: Create release directory
         run: |
           ssh ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }} << 'EOF'
             set -e
 
             APP_DIR=/home/ubuntu/user-app
-            RELEASE_DIR=$APP_DIR/releases/$(date +%s)
+            RELEASE_ID=$(date +%s)
+            RELEASE_DIR=$APP_DIR/releases/$RELEASE_ID
 
-            mkdir -p $APP_DIR/releases
             mkdir -p $RELEASE_DIR
-
-            exit
+            echo $RELEASE_ID > /tmp/release_id
           EOF
 
-      # 9️⃣ Copy files
+      # 9️⃣ Copy build to release directory
       - name: Copy files to EC2
         run: |
-          rsync -avz deploy/ \
-            ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }}:/home/ubuntu/user-app/releases/current/
+          RELEASE_ID=$(ssh ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }} "cat /tmp/release_id")
 
-      # 🔟 Activate release + PM2
-      - name: Restart app
+          rsync -avz deploy/ \
+            ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }}:/home/ubuntu/user-app/releases/$RELEASE_ID/
+
+      # 🔟 Activate release atomically + restart PM2
+      - name: Activate release
         run: |
           ssh ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_HOST }} << 'EOF'
-            cd /home/ubuntu/user-app/releases/current
+            set -e
+
+            APP_DIR=/home/ubuntu/user-app
+            RELEASE_ID=$(cat /tmp/release_id)
+
+            ln -sfn $APP_DIR/releases/$RELEASE_ID $APP_DIR/releases/current
+
+            cd $APP_DIR/releases/current
 
             pm2 reload user-app \
               --update-env \
