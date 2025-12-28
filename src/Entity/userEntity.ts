@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Task } from "./taskEntity";
@@ -10,20 +10,21 @@ import { Task } from "./taskEntity";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
-  @Column()
-  username: string;
+  @Column({ type: "nvarchar", length: 100 })
+  username!: string;
 
-  @Column()
-  email: string;
+  @Column({ type: "nvarchar", length: 150 })
+  email!: string;
 
-  @Column()
-  password: string;
+  @Column({ type: "nvarchar", length: 255 })
+  password!: string;
 
-  @ManyToOne(() => Task, (task) => task.user)
-  tasks: Task[];
+  // ✅ One user → many tasks
+  @OneToMany(() => Task, (task) => task.user)
+  tasks!: Task[];
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 }

@@ -1,19 +1,21 @@
-version: "3.9"
-
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: chat_sql_server
+  mysql:
+    image: mysql:8.0
+    container_name: chat_mysql_server
     ports:
-      - "1433:1433"
+      - "3307:3306"
     environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Manjoor@1822"
-      MSSQL_PID: "Developer"
-      MSSQL_DATABASE: "user_app_db"
+      MYSQL_ROOT_PASSWORD: "root_password"
+      MYSQL_DATABASE: "user_app_db"
+      MYSQL_USER: "user_app"
+      MYSQL_PASSWORD: "Manjoor@1822"
     networks:
       - chat_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
 networks:
   chat_network:

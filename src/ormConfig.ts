@@ -1,21 +1,23 @@
 import { DataSource } from "typeorm";
 import { User } from "./Entity/userEntity";
 import { Task } from "./Entity/taskEntity";
-import dotenv from "dotenv";
-dotenv.config();
+import { env } from "./env";
 
 export const AppDataSource = new DataSource({
-  type: "mssql",
-  host: "localhost",
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  type: "mysql",
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+
+
+
+  extra: {
+    connectTimeout: 20000,
+  },
+
   synchronize: true,
   logging: true,
   entities: [User, Task],
-  options: {
-    encrypt: false,
-    trustServerCertificate: true,
-  },
 });

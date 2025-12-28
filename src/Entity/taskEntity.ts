@@ -1,18 +1,23 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { User } from "./userEntity";
-
 
 @Entity()
 export class Task {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id!: string;
 
-  @Column()
-  description: string;
+  @Column({ type: "nvarchar", length: 255 })
+  description!: string;
 
-  @Column({ default: false })
-  completed: boolean;
+  @Column({ type: "bit", default: false })
+  completed!: boolean;
 
+  // ✅ Many tasks → one user
   @ManyToOne(() => User, (user) => user.tasks)
-  user: User;
+  user!: User;
 }
